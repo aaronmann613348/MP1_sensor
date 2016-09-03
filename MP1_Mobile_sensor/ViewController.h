@@ -7,9 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreMotion/CoreMotion.h>
 
 @interface ViewController : UIViewController
 
+@property (strong, nonatomic) IBOutlet UILabel *acc_x;
+@property (strong, nonatomic) IBOutlet UILabel *acc_y;
+@property (strong, nonatomic) IBOutlet UILabel *acc_z;
+
+@property CMMotionManager * motionManager;
+
+@property BOOL flag;
+
+- (IBAction)switcher:(id)sender;
 
 @end
 
