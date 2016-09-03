@@ -18,9 +18,9 @@
     [super viewDidLoad];
     
     self.motionManager = [[CMMotionManager alloc] init];
-    self.acc_x.text = @"";
-    self.acc_y.text = @"";
-    self.acc_z.text = @"";
+    self.acc_x.text = @"0";
+    self.acc_y.text = @"0";
+    self.acc_z.text = @"0";
     
     // Do any additional setup after loading the view, typically from a nib.
     
@@ -41,14 +41,17 @@
 - (IBAction)switcher:(id)sender {
     if(self.flag == false){
         self.flag = true;
-        [self.motionManager startAccelerometerUpdates];
-        CMAccelerometerData* data = [self.motionManager accelerometerData];
-        while(data.acceleration.x == 0.0){
-            data = [self.motionManager accelerometerData];
+        //[self.motionManager startAccelerometerUpdates];
+        [
+        self.motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue]
+            withHandler:^(CMAccelerometerData  *accelerometerData, NSError *error)
+        {
+            [self outputAccelertionData:accelerometerData.acceleration];
+            if(error){
+                NSLog(@"%@", error);
+            }
         }
-        self.acc_x.text = [NSString stringWithFormat:@"%f", data.acceleration.x];
-        self.acc_y.text = [NSString stringWithFormat:@"%f", data.acceleration.y];
-        self.acc_z.text = [NSString stringWithFormat:@"%f", data.acceleration.z];
+        ];
     }
     else{
         [self.motionManager stopAccelerometerUpdates];
@@ -56,4 +59,12 @@
     }
 
 }
+
+-(void)outputAccelertionData:(CMAcceleration)acceleration
+{
+    self.acc_x.text = [NSString stringWithFormat:@"%f", acceleration.x];
+    self.acc_y.text = [NSString stringWithFormat:@"%f", acceleration.y];
+    self.acc_z.text = [NSString stringWithFormat:@"%f", acceleration.z];
+}
+
 @end
